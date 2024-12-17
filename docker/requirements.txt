@@ -1,4 +1,5 @@
 matplotlib==3.10.0
+pendulum==3.0.0
 polars==1.17.1
 pyarrow==18.1.0
 requests==2.32.3
