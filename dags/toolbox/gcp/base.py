@@ -1,6 +1,7 @@
 import json
-from google.oauth2 import service_account
+
 from airflow.models.connection import Connection
+from google.oauth2 import service_account
 
 
 class Base:

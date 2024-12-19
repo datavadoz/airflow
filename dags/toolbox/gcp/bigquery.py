@@ -1,10 +1,11 @@
 import json
 import os
+
 from google.cloud import bigquery
 from google.cloud.bigquery.external_config import ExternalSourceFormat
 
-from .base import Base
 from toolbox.config import get_schema_folder
+from .base import Base
 
 
 class GSheetTable:
