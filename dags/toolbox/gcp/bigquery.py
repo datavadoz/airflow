@@ -32,7 +32,7 @@ class GSheetTable:
         ext_config = bigquery.ExternalConfig(ExternalSourceFormat.GOOGLE_SHEETS)
         ext_config.source_uris = [self.url]
         ext_config.google_sheets_options.skip_leading_rows = 1
-        ext_config.google_sheets_options.range = (self.tab_name,)
+        ext_config.google_sheets_options.range = self.tab_name
         return ext_config
 
     def _get_bq_schema(self) -> list[bigquery.SchemaField]:
@@ -77,7 +77,13 @@ class BigQuery(Base):
     def create_bq_table_from_gsheet_table(
             self,
             gsheet_table: GSheetTable,
-            full_table_id: str
+            full_table_id: str,
+            recreate_if_exists: bool
     ) -> None:
+        self.client = self.get_client()
+
+        if recreate_if_exists:
+            self.client.delete_table(full_table_id)
+
         bq_table = gsheet_table.get_bq_table(full_table_id)
         self.client.create_table(bq_table)
