@@ -86,4 +86,5 @@ class BigQuery(Base):
             self.client.delete_table(full_table_id)
 
         bq_table = gsheet_table.get_bq_table(full_table_id)
-        self.client.create_table(bq_table)
+        bq_table = self.client.create_table(bq_table)
+        print(f'Created {bq_table.full_table_id}')
