@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 import pendulum
@@ -33,8 +34,29 @@ def create_external_table():
     )
 
 
-def create_partitioned_table():
+def create_partitioned_table(**kwargs):
+    execution_date = kwargs.get('execution_date').strftime('%Y-%m-%d')
+
     bq = BigQuery('default_bigquery')
+    retries = 100
+
+    while retries > 0:
+        result = bq.run_query('datavadoz-438714.cps_monitor_gsheet.facebook')
+        last_three_dates = [
+            date.strftime('%Y-%m-%d')
+            for date in result.to_dict(as_series=False)['date']
+        ]
+
+        print(f'Execution date: {execution_date}')
+        print(f'Last three dates: {last_three_dates}')
+
+        if execution_date in set(last_three_dates):
+            break
+
+        retries -= 1
+        print(f'Remaining retries {retries}. Sleeping...')
+        time.sleep(30)
+
     bq.create_partitioned_table(
         full_table_id='datavadoz-438714.cps_monitor_gsheet.facebook',
         partitioned_column='date'

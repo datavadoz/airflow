@@ -1,6 +1,7 @@
 import json
 import os
 
+import polars as pl
 from google.cloud import bigquery
 from google.cloud.bigquery.external_config import ExternalSourceFormat
 
@@ -113,3 +114,21 @@ class BigQuery(Base):
         )
 
         query_job.result()
+
+    def run_query(self, full_table_id) -> pl.DataFrame:
+        sql_template_path = os.path.join(get_sql_folder(), 'sql_002.sql')
+        with open(sql_template_path, 'r') as f:
+            sql_template = f.read()
+
+        sql_stmt = sql_template.format(full_table_id=full_table_id)
+
+        self.client = self.get_client()
+        query_job = self.client.query(
+            sql_stmt,
+            job_config=bigquery.QueryJobConfig(
+                dry_run=False,
+                use_query_cache=False
+            )
+        )
+
+        return pl.from_arrow(query_job.result().to_arrow())
