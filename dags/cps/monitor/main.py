@@ -23,13 +23,21 @@ default_args = {
 def create_external_table():
     bq = BigQuery('default_bigquery')
     bq.create_bq_table_from_gsheet_table(
-        GSheetTable(
+        gsheet_table=GSheetTable(
             '14zV1me4r6dHQn6c7nBbpW549eumP9OdfVfUq3kH51uQ',
             'FB_Day',
             'cps_gsheet_bot_facebook.json'
         ),
-        'datavadoz-438714.cps_monitor_gsheet.facebook',
+        full_table_id='datavadoz-438714.cps_monitor_gsheet.facebook',
         recreate_if_exists=True
+    )
+
+
+def create_partitioned_table():
+    bq = BigQuery('default_bigquery')
+    bq.create_partitioned_table(
+        full_table_id='datavadoz-438714.cps_monitor_gsheet.facebook',
+        partitioned_column='date'
     )
 
 
@@ -46,4 +54,9 @@ with DAG(
         python_callable=create_external_table
     )
 
-    t001 >> t002 >> t999
+    t003 = PythonOperator(
+        task_id='create_partitioned_table_facebook',
+        python_callable=create_partitioned_table
+    )
+
+    t001 >> t002 >> t003 >> t999
