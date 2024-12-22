@@ -115,20 +115,15 @@ class BigQuery(Base):
 
         query_job.result()
 
-    def run_query(self, full_table_id) -> pl.DataFrame:
-        sql_template_path = os.path.join(get_sql_folder(), 'sql_002.sql')
-        with open(sql_template_path, 'r') as f:
-            sql_template = f.read()
-
-        sql_stmt = sql_template.format(full_table_id=full_table_id)
-
+    def run_query(
+            self,
+            sql_stmt: str,
+            job_config=None
+    ) -> pl.DataFrame:
         self.client = self.get_client()
-        query_job = self.client.query(
-            sql_stmt,
-            job_config=bigquery.QueryJobConfig(
-                dry_run=False,
-                use_query_cache=False
-            )
+        job_config = job_config or bigquery.QueryJobConfig(
+            dry_run=False,
+            use_query_cache=False
         )
-
+        query_job = self.client.query(sql_stmt, job_config=job_config)
         return pl.from_arrow(query_job.result().to_arrow())
