@@ -4,10 +4,10 @@ from datetime import datetime, timedelta
 
 import pendulum
 import polars as pl
-import requests
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
+from airflow.providers.telegram.operators.telegram import TelegramOperator
 
 from toolbox.config import get_sql_folder
 from toolbox.gcp.bigquery import BigQuery, GSheetTable
@@ -22,7 +22,7 @@ DMC3_LIST = [
     'LAPTOP CTM',
     'LOA CAO CẤP',
     'MACBOOK CTM',
-    'NHẬP CŨ'
+    'NHẬP CŨ',
     'NUBIA CTM',
     'OPPO CTM',
     'PHỤ KIỆN APPLE',
@@ -35,8 +35,6 @@ DMC3_LIST = [
     'THIẾT BỊ VĂN PHÒNG',
     'XIAOMI CTM',
 ]
-TELEGRAM_TOKEN = '<TELEGRAM_TOKEN>'
-TELEGRAM_CHAT_ID = '<TELEGRAM_GROUP_ID>'
 
 
 local_tz = pendulum.timezone("Asia/Ho_Chi_Minh")
@@ -157,13 +155,16 @@ def gen_report(**kwargs):
                         f"  - CPA: ${cpa:.3f} ({diff_cpa:.1f}%)\n"
 
         msg = header + body
+        if len(msg) == 0:
+            print(f'DMC3 {dmc3} does not have data!')
+            continue
 
-        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage" \
-              f"?chat_id={TELEGRAM_CHAT_ID}" \
-              f"&parse_mode=markdown" \
-              f"&text={msg}"
-
-        print(requests.get(url).json())
+        TelegramOperator(
+            task_id='not_important',
+            telegram_conn_id='tlg_dev',
+            telegram_kwargs={'parse_mode': 'Markdown'},
+            text=msg,
+        ).execute(kwargs)
 
 
 with DAG(
