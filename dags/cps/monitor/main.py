@@ -161,7 +161,7 @@ def gen_report(**kwargs):
 
         TelegramOperator(
             task_id='not_important',
-            telegram_conn_id='tlg_dev',
+            telegram_conn_id='tlg_prod',
             telegram_kwargs={'parse_mode': 'Markdown'},
             text=msg,
         ).execute(kwargs)
