@@ -168,7 +168,7 @@ def gen_report(**kwargs):
 
 
 with DAG(
-    'cps_mkt_monitor',
+    'cps_mkt_monitor_cost',
     default_args=default_args,
     schedule_interval='45 10 * * *'
 ) as dag:
