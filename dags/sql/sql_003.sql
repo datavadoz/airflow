@@ -1,8 +1,8 @@
 WITH all_sources AS (
   SELECT `date`
-    , SUM(cost) / 23500                             AS total_cost
-    , SUM(cost) / 23500 / SUM(landing_page_views)   AS cpc
-    , SUM(cost) / 23500 / SUM(website_adds_to_cart) AS cpa
+    , SUM(cost) / 23500                                                                      AS total_cost
+    , IF(SUM(landing_page_views) = 0, NULL, SUM(cost) / 23500 / SUM(landing_page_views))     AS cpc
+    , IF(SUM(website_adds_to_cart) = 0, NULL, SUM(cost) / 23500 / SUM(website_adds_to_cart)) AS cpa
   FROM `datavadoz-438714.cps_monitor_gsheet.facebook_partition`
   WHERE 1 = 1
     {dmc3_condition}
@@ -16,8 +16,18 @@ WITH all_sources AS (
     , ROUND(cpc, 2)        AS cpc
     , ROUND(cpa, 2)        AS cpa
     , ROUND((total_cost - LAG(total_cost) OVER (ORDER BY `date`)) / LAG(total_cost) OVER (ORDER BY `date`) * 100.0, 2) AS diff_cost
-    , ROUND((cpc - LAG(cpc) OVER (ORDER BY `date`)) / LAG(cpc) OVER (ORDER BY `date`) * 100.0, 2)                      AS diff_cpc
-    , ROUND((cpa - LAG(cpa) OVER (ORDER BY `date`)) / LAG(cpa) OVER (ORDER BY `date`) * 100.0, 2)                      AS diff_cpa
+    , CASE
+        WHEN cpc IS NULL AND LAG(cpc) OVER (ORDER BY `date`) IS NULL THEN NULL
+        WHEN cpc IS NULL AND LAG(cpc) OVER (ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN cpc IS NOT NULL AND LAG(cpc) OVER (ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((cpc - LAG(cpc) OVER (ORDER BY `date`)) / LAG(cpc) OVER (ORDER BY `date`) * 100.0, 2)
+      END AS diff_cpc
+    , CASE
+        WHEN cpa IS NULL AND LAG(cpa) OVER (ORDER BY `date`) IS NULL THEN NULL
+        WHEN cpa IS NULL AND LAG(cpa) OVER (ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN cpa IS NOT NULL AND LAG(cpa) OVER (ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((cpa - LAG(cpa) OVER (ORDER BY `date`)) / LAG(cpa) OVER (ORDER BY `date`) * 100.0, 2)
+      END AS diff_cpa
     , 'all' AS `source`
   FROM all_sources
   ORDER BY `date` DESC
@@ -25,9 +35,9 @@ WITH all_sources AS (
 , specific_source AS (
   SELECT `date`
     , `source`
-    , SUM(cost) / 23500                             AS total_cost
-    , SUM(cost) / 23500 / SUM(landing_page_views)   AS cpc
-    , SUM(cost) / 23500 / SUM(website_adds_to_cart) AS cpa
+    , SUM(cost) / 23500                                                                      AS total_cost
+    , IF(SUM(landing_page_views) = 0, NULL, SUM(cost) / 23500 / SUM(landing_page_views))     AS cpc
+    , IF(SUM(website_adds_to_cart) = 0, NULL, SUM(cost) / 23500 / SUM(website_adds_to_cart)) AS cpa
   FROM `datavadoz-438714.cps_monitor_gsheet.facebook_partition`
   WHERE 1 = 1
     {dmc3_condition}
@@ -41,8 +51,18 @@ WITH all_sources AS (
     , ROUND(cpc, 2)        AS cpc
     , ROUND(cpa, 2)        AS cpa
     , ROUND((total_cost - LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) * 100.0, 2) AS diff_cost
-    , ROUND((cpc - LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(cpc) OVER (ORDER BY `date`) * 100.0, 2)                                            AS diff_cpc
-    , ROUND((cpa - LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(cpa) OVER (ORDER BY `date`) * 100.0, 2)                                            AS diff_cpa
+    , CASE
+        WHEN cpc IS NULL AND LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN NULL
+        WHEN cpc IS NULL AND LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN cpc IS NOT NULL AND LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((cpc - LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) * 100.0, 2)
+      END AS diff_cpc
+    , CASE
+        WHEN cpa IS NULL AND LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN NULL
+        WHEN cpa IS NULL AND LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN cpa IS NOT NULL AND LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((cpa - LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(cpa) OVER (PARTITION BY `source` ORDER BY `date`) * 100.0, 2)
+      END AS diff_cpa
     , `source`
   FROM specific_source
 )
