@@ -21,17 +21,16 @@ default_args = {
 
 
 def create_external_table(**kwargs):
-    pass
-    # bq = BigQuery('default_bigquery')
-    # bq.create_bq_table_from_gsheet_table(
-    #     gsheet_table=GSheetTable(
-    #         sheet_id='14zV1me4r6dHQn6c7nBbpW549eumP9OdfVfUq3kH51uQ',
-    #         tab_name='Cost runrate',
-    #         schema_name=''
-    #     ),
-    #     full_table_id='datavadoz-438714.cps_monitor_gsheet.cost_run_rate',
-    #     recreate_if_exists=True
-    # )
+    bq = BigQuery('default_bigquery')
+    bq.create_bq_table_from_gsheet_table(
+        gsheet_table=GSheetTable(
+            sheet_id='14zV1me4r6dHQn6c7nBbpW549eumP9OdfVfUq3kH51uQ',
+            tab_name='Cost runrate!A2:AG69',
+            schema_name='cps_gsheet_bot_cost_run_rate.json'
+        ),
+        full_table_id='datavadoz-438714.cps_monitor_gsheet.cost_run_rate',
+        recreate_if_exists=True
+    )
 
 
 with DAG(
