@@ -13,6 +13,7 @@ from toolbox.config import get_sql_folder
 from toolbox.gcp.bigquery import BigQuery, GSheetTable
 
 DMC3_LIST = [
+    'ALL',
     'APPLE WATCH CTM',
     'ĐIỆN GIA ĐÌNH',
     'ĐỒNG HỒ',
@@ -111,7 +112,7 @@ def gen_report(**kwargs):
 
     for dmc3 in dmc3_list:
         dmc3_condition = f"AND dmc3 = '{dmc3}'"
-        if len(dmc3_list) == 1 and dmc3.upper() == 'ALL':
+        if dmc3.upper() == 'ALL':
             dmc3_condition = ''
 
         sql_template_path = os.path.join(get_sql_folder(), 'sql_003.sql')
@@ -186,15 +187,9 @@ with DAG(
     )
 
     t004 = PythonOperator(
-        task_id='generate_all_dmc3_report',
-        python_callable=gen_report,
-        op_kwargs={'dmc3': ['ALL']}
-    )
-
-    t005 = PythonOperator(
-        task_id='generate_specific_dmc3_report',
+        task_id='generate_dmc3_report',
         python_callable=gen_report,
         op_kwargs={'dmc3': DMC3_LIST}
     )
 
-    t001 >> t002 >> t003 >> t004 >> t005 >> t999
+    t001 >> t002 >> t003 >> t004 >> t999
