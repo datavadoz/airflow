@@ -159,18 +159,18 @@ def gen_report(**kwargs):
             cost = row['total_cost']
             cpc = f'${row["cpc"]:.3f}' if row['cpc'] else 'N/A'
             cpa = f'${row["cpa"]:.3f}' if row['cpa'] else 'N/A'
-            diff_cost = row['diff_cost']
+            diff_cost = f'{row["diff_cost"]:.1f}%' if row['diff_cost'] else 'N/A'
             diff_cpc = f'{row["diff_cpc"]:.1f}%' if row['diff_cpc'] else 'N/A'
             diff_cpa = f'{row["diff_cpa"]:.1f}%' if row['diff_cpa'] else 'N/A'
 
             if source == 'all':
                 header += f"=== Facebook Cost Report on *{execution_date}*\n" \
                           f">>> *{dmc3}*\n"
-                header += f"- *Total*: ${cost:,} ({diff_cost:.1f}%) | " \
+                header += f"- *Total*: ${cost:,} ({diff_cost}) | " \
                           f"CPC: {cpc} ({diff_cpc}) | " \
                           f"CPA: {cpa} ({diff_cpa})\n"
             else:
-                body += f"  *{source}*: ${cost:,} ({diff_cost:.1f}%)\n" \
+                body += f"  *{source}*: ${cost:,} ({diff_cost})\n" \
                         f"  - CPC: {cpc} ({diff_cpc})\n" \
                         f"  - CPA: {cpa} ({diff_cpa})\n"
 

@@ -15,7 +15,12 @@ WITH all_sources AS (
     , ROUND(total_cost, 2) AS total_cost
     , ROUND(cpc, 2)        AS cpc
     , ROUND(cpa, 2)        AS cpa
-    , ROUND((total_cost - LAG(total_cost) OVER (ORDER BY `date`)) / LAG(total_cost) OVER (ORDER BY `date`) * 100.0, 2) AS diff_cost
+    , CASE
+        WHEN total_cost IS NULL AND LAG(total_cost) OVER (ORDER BY `date`) IS NULL THEN NULL
+        WHEN total_cost IS NULL AND LAG(total_cost) OVER (ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN total_cost IS NOT NULL AND LAG(total_cost) OVER (ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((total_cost - LAG(total_cost) OVER (ORDER BY `date`)) / LAG(total_cost) OVER (ORDER BY `date`) * 100.0, 2)
+      END AS diff_cost
     , CASE
         WHEN cpc IS NULL AND LAG(cpc) OVER (ORDER BY `date`) IS NULL THEN NULL
         WHEN cpc IS NULL AND LAG(cpc) OVER (ORDER BY `date`) IS NOT NULL THEN -100.0
@@ -50,7 +55,12 @@ WITH all_sources AS (
     , ROUND(total_cost, 2) AS total_cost
     , ROUND(cpc, 2)        AS cpc
     , ROUND(cpa, 2)        AS cpa
-    , ROUND((total_cost - LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) * 100.0, 2) AS diff_cost
+    , CASE
+        WHEN total_cost IS NULL AND LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN NULL
+        WHEN total_cost IS NULL AND LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) IS NOT NULL THEN -100.0
+        WHEN total_cost IS NOT NULL AND LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN 100.0
+        ELSE ROUND((total_cost - LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`)) / LAG(total_cost) OVER (PARTITION BY `source` ORDER BY `date`) * 100.0, 2)
+      END AS diff_cost
     , CASE
         WHEN cpc IS NULL AND LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) IS NULL THEN NULL
         WHEN cpc IS NULL AND LAG(cpc) OVER (PARTITION BY `source` ORDER BY `date`) IS NOT NULL THEN -100.0
