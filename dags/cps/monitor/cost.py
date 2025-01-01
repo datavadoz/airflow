@@ -117,13 +117,19 @@ def create_partitioned_table(**kwargs):
 
 
 def gen_report(**kwargs):
-    channel = kwargs.get('channel')
+    channel = str(kwargs.get('channel')).upper()
     execution_date = kwargs.get('execution_date')
     previous_date = execution_date - timedelta(days=1)
     execution_date = execution_date.strftime('%Y-%m-%d')
     previous_date = previous_date.strftime('%Y-%m-%d')
 
-    if channel == 'google':
+    if channel == 'FACEBOOK':
+        telegram_conn_id = 'tlg_prod_facebook'
+        sql_template_path = os.path.join(get_sql_folder(), 'sql_003.sql')
+    elif channel == 'GOOGLE':
+        telegram_conn_id = 'tlg_prod_google'
+        sql_template_path = os.path.join(get_sql_folder(), 'sql_005.sql')
+    else:
         print(f'Unimplemented for {channel}')
         return
 
@@ -134,7 +140,6 @@ def gen_report(**kwargs):
         if dmc3.upper() == 'ALL':
             dmc3_condition = ''
 
-        sql_template_path = os.path.join(get_sql_folder(), 'sql_003.sql')
         with open(sql_template_path, 'r') as f:
             sql_template = f.read()
 
@@ -164,7 +169,7 @@ def gen_report(**kwargs):
             diff_cpa = f'{row["diff_cpa"]:.1f}%' if row['diff_cpa'] else 'N/A'
 
             if source == 'all':
-                header += f"=== Facebook Cost Report on *{execution_date}*\n" \
+                header += f"=== {channel} Cost Report on *{execution_date}*\n" \
                           f">>> *{dmc3}*\n"
                 header += f"- *Total*: ${cost:,} ({diff_cost}) | " \
                           f"CPC: {cpc} ({diff_cpc}) | " \
@@ -181,7 +186,7 @@ def gen_report(**kwargs):
 
         TelegramOperator(
             task_id='not_important',
-            telegram_conn_id='tlg_prod_facebook',
+            telegram_conn_id=telegram_conn_id,
             telegram_kwargs={'parse_mode': 'Markdown'},
             text=msg,
         ).execute(kwargs)
