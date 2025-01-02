@@ -1,0 +1,121 @@
+[
+  {
+    "name": "session_source",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "session_medium",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "session_campaign",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "date",
+    "mode": "NULLABLE",
+    "type": "DATE",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "sessions",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "conversions",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "engagement_rate",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "transactions",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "total_users",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "new_users",
+    "mode": "NULLABLE",
+    "type": "NUMERIC",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "gg_channel",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "channel",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "region",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "url",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "url_region",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "dmc3",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "pic",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  }
+]
