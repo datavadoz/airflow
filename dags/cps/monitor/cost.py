@@ -64,6 +64,12 @@ def create_external_table(**kwargs):
             'GG_ADs_Day',
             'cps_gsheet_bot_google.json'
         )
+    elif channel == 'ga4':
+        gsheet_table = GSheetTable(
+            '14zV1me4r6dHQn6c7nBbpW549eumP9OdfVfUq3kH51uQ',
+            'GA_Day',
+            'cps_gsheet_bot_ga4.json'
+        )
     else:
         print(f'Unknown channel {channel}')
         exit(1)
@@ -236,5 +242,24 @@ with DAG(
         op_kwargs={'channel': 'google'}
     )
 
+    t202 = PythonOperator(
+        task_id='create_external_table_ga4',
+        python_callable=create_external_table,
+        op_kwargs={'channel': 'ga4'}
+    )
+
+    t203 = PythonOperator(
+        task_id='create_partitioned_table_ga4',
+        python_callable=create_partitioned_table,
+        op_kwargs={'channel': 'ga4'}
+    )
+
+    t204 = PythonOperator(
+        task_id='generate_report_ga4',
+        python_callable=gen_report,
+        op_kwargs={'channel': 'ga4'}
+    )
+
     t001 >> t002 >> t003 >> t004 >> t999
     t001 >> t102 >> t103 >> t104 >> t999
+    t001 >> t202 >> t203 >> t204 >> t999
