@@ -122,6 +122,54 @@ def create_partitioned_table(**kwargs):
     )
 
 
+def gen_msg_header(channel: str, execution_date: str, dmc3: str) -> str:
+    if channel in ('GOOGLE', 'FACEBOOK'):
+        return f"=== {channel} Cost Report on *{execution_date}*\n" \
+               f">>> *{dmc3}*\n"
+    if channel == 'GA4':
+        return f"=== {channel} Session Report on *{execution_date}*\n" \
+               f">>> *{dmc3}*\n"
+    return ''
+
+
+def gen_msg_body(channel: str, data: pl.DataFrame) -> str:
+    body = ''
+    print(data)
+
+    if channel.upper() in ('GOOGLE', 'FACEBOOK'):
+        for row in data.rows(named=True):
+            source = row['source']
+            cost = row['total_cost']
+            cpc = f'${row["cpc"]:.3f}' if row['cpc'] else 'N/A'
+            cpa = f'${row["cpa"]:.3f}' if row['cpa'] else 'N/A'
+            diff_cost = f'{row["diff_cost"]:.1f}%' if row['diff_cost'] else 'N/A'
+            diff_cpc = f'{row["diff_cpc"]:.1f}%' if row['diff_cpc'] else 'N/A'
+            diff_cpa = f'{row["diff_cpa"]:.1f}%' if row['diff_cpa'] else 'N/A'
+
+            if source == 'all':
+                body += f"- *Total*: ${cost:,} ({diff_cost}) | " \
+                        f"CPC: {cpc} ({diff_cpc}) | " \
+                        f"CPA: {cpa} ({diff_cpa})\n"
+            else:
+                body += f"  *{source}*: ${cost:,} ({diff_cost})\n" \
+                        f"  - CPC: {cpc} ({diff_cpc})\n" \
+                        f"  - CPA: {cpa} ({diff_cpa})\n"
+    elif channel.upper() == 'GA4':
+        for row in data.rows(named=True):
+            source = row['source']
+            sessions = f'{int(row["total_sessions"]):,}' if row['total_sessions'] else 'N/A'
+            diff_sessions = f'{row["diff_sessions"]:.1f}%' if row['diff_sessions'] else 'N/A'
+
+            if source == 'all':
+                body += f"- *Total*: {sessions} ({diff_sessions})\n"
+            else:
+                body += f"  *{source}*: {sessions} ({diff_sessions})\n"
+    else:
+        print(f'Unknown {channel}!')
+
+    return body
+
+
 def gen_report(**kwargs):
     channel = str(kwargs.get('channel')).upper()
     execution_date = kwargs.get('execution_date')
@@ -135,6 +183,9 @@ def gen_report(**kwargs):
     elif channel == 'GOOGLE':
         telegram_conn_id = 'tlg_prod_google'
         sql_template_path = os.path.join(get_sql_folder(), 'sql_005.sql')
+    elif channel == 'GA4':
+        telegram_conn_id = 'tlg_prod_ga4'
+        sql_template_path = os.path.join(get_sql_folder(), 'sql_006.sql')
     else:
         print(f'Unimplemented for {channel}')
         return
@@ -160,36 +211,18 @@ def gen_report(**kwargs):
             pl.col('date') == datetime.strptime(execution_date, '%Y-%m-%d')
         )
 
-        print(result)
+        header = gen_msg_header(
+            channel=channel,
+            execution_date=execution_date,
+            dmc3=dmc3
+        )
+        body = gen_msg_body(channel=channel, data=result)
 
-        header = ''
-        body = ''
-
-        for row in result.rows(named=True):
-            source = row['source']
-            cost = row['total_cost']
-            cpc = f'${row["cpc"]:.3f}' if row['cpc'] else 'N/A'
-            cpa = f'${row["cpa"]:.3f}' if row['cpa'] else 'N/A'
-            diff_cost = f'{row["diff_cost"]:.1f}%' if row['diff_cost'] else 'N/A'
-            diff_cpc = f'{row["diff_cpc"]:.1f}%' if row['diff_cpc'] else 'N/A'
-            diff_cpa = f'{row["diff_cpa"]:.1f}%' if row['diff_cpa'] else 'N/A'
-
-            if source == 'all':
-                header += f"=== {channel} Cost Report on *{execution_date}*\n" \
-                          f">>> *{dmc3}*\n"
-                header += f"- *Total*: ${cost:,} ({diff_cost}) | " \
-                          f"CPC: {cpc} ({diff_cpc}) | " \
-                          f"CPA: {cpa} ({diff_cpa})\n"
-            else:
-                body += f"  *{source}*: ${cost:,} ({diff_cost})\n" \
-                        f"  - CPC: {cpc} ({diff_cpc})\n" \
-                        f"  - CPA: {cpa} ({diff_cpa})\n"
-
-        msg = header + body
-        if len(msg) == 0:
+        if len(body) == 0:
             print(f'DMC3 {dmc3} does not have data!')
             continue
 
+        msg = header + body
         TelegramOperator(
             task_id='not_important',
             telegram_conn_id=telegram_conn_id,
