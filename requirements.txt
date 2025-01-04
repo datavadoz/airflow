@@ -1,9 +1,10 @@
-apache-airflow[google]==2.10.4
 apache-airflow-providers-telegram==4.6.0
+apache-airflow[google]==2.10.4
 google-cloud-bigquery==3.27.0
 matplotlib==3.10.0
 pendulum==3.0.0
 polars==1.17.1
 pyarrow==18.1.0
+pylint==3.3.3
 python-telegram-bot==21.9
 requests==2.32.3
