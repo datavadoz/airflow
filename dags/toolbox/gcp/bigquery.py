@@ -90,6 +90,14 @@ class BigQuery(Base):
         bq_table = self.client.create_table(bq_table)
         print(f'Created {bq_table.full_table_id}')
 
+    def create_dataset(
+            self,
+            dataset_name: str,
+            exists_ok: bool = True
+    ) -> None:
+        client = self.get_client()
+        client.create_dataset(dataset_name, exists_ok=exists_ok)
+
     def create_partitioned_table(
             self,
             full_table_id: str,
