@@ -24,8 +24,7 @@ jobs:
     - name: Set PYTHONPATH
       shell: bash
       run: |
-        echo "PYTHONPATH=$pwd/dags"
-        echo "PYTHONPATH=$pwd/dags" >> $GITHUB_ENV
+        echo "PYTHONPATH=dags" >> $GITHUB_ENV
 
     - name: Analysing the code with pylint
       run: |
