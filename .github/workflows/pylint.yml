@@ -23,4 +23,5 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
+        export PYTHONPATH="$PYTHONPATH:$pwd/airflow/dags"
         pylint $(git ls-files '*.py')
