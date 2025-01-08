@@ -1,3 +1,4 @@
+""" This DAG crawls data from Google and Facebook ad library """
 from datetime import datetime
 
 import pendulum
@@ -20,6 +21,7 @@ default_args = {
 
 
 def create_bq_dataset(**kwargs):
+    """ Create a set of data set """
     bq_datasets = kwargs.get('bq_datasets')
     bq = BigQuery('default_bigquery')
 
