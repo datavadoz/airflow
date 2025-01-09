@@ -1,0 +1,86 @@
+[
+  {
+    "name": "channel",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "city_tm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "city_lm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "city_mom",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "province_tm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "province_lm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "province_mom",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "summary_tm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "summary_lm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "summary_mom",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "kpi_province_tm",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "kpi_province_perc",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  }
+]
