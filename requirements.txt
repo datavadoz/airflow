@@ -1,5 +1,7 @@
 apache-airflow-providers-telegram==4.6.0
 apache-airflow[google]==2.10.4
+dbt-bigquery==1.9.1
+dbt-core==1.9.1
 google-cloud-bigquery==3.27.0
 matplotlib==3.10.0
 pendulum==3.0.0
