@@ -30,6 +30,14 @@ def create_bq_dataset(**kwargs):
         print(f'Created {dataset_name} dataset')
 
 
+def fetch_google_ads():
+    pass
+
+
+def fetch_facebook_ads():
+    pass
+
+
 with DAG(
     'cps_mkt_crawl_ads',
     default_args=default_args,
@@ -51,4 +59,14 @@ with DAG(
         }
     )
 
-    t001 >> t002 >> t999
+    t003 = PythonOperator(
+        task_id='fetch_google_ads',
+        python_callable=fetch_google_ads
+    )
+
+    t004 = PythonOperator(
+        task_id='fetch_facebook_ads',
+        python_callable=fetch_facebook_ads
+    )
+
+    t001 >> t002 >> [t003, t004] >> t999
