@@ -6,6 +6,7 @@ from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
+from cps.crawl.google import fetch_google_ads
 from toolbox.gcp.bigquery import BigQuery
 
 local_tz = pendulum.timezone("Asia/Ho_Chi_Minh")
@@ -28,10 +29,6 @@ def create_bq_dataset(**kwargs):
     for dataset_name in bq_datasets:
         bq.create_dataset(dataset_name)
         print(f'Created {dataset_name} dataset')
-
-
-def fetch_google_ads():
-    pass
 
 
 def fetch_facebook_ads():
