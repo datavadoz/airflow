@@ -21,8 +21,8 @@ default_args = {
 }
 
 
-def create_bq_dataset(**kwargs):
-    """ Create a set of data set """
+def create_bq_datasets(**kwargs):
+    """ Create a set of datasets """
     bq_datasets = kwargs.get('bq_datasets')
     bq = BigQuery('default_bigquery')
 
@@ -45,13 +45,13 @@ with DAG(
 
     t002 = PythonOperator(
         task_id='create_datasets',
-        python_callable=create_bq_dataset,
+        python_callable=create_bq_datasets,
         op_kwargs={
             'bq_datasets': [
                 'cps_ads_google',
-                'cps_ads_google_history',
+                'cps_ads_google_raw',
                 'cps_ads_meta',
-                'cps_ads_meta_history'
+                'cps_ads_meta_raw'
             ]
         }
     )
