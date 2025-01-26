@@ -134,4 +134,4 @@ with DAG(
         python_callable=notify
     )
 
-    t001 >> t002 >> t999
+    t001 >> t002 >> t003 >> t999
