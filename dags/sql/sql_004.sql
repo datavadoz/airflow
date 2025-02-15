@@ -9,6 +9,7 @@ SELECT dmc3
   , IF(plan_gg = 0, NULL, ROUND(actual_gg / plan_gg * 100, 2))                         AS actual_vs_plan_gg
   , IF(plan_tt = 0, NULL, ROUND(actual_tt / plan_tt * 100, 2))                         AS actual_vs_plan_tt
   , IF(plan_new_camp_dynamic_search = 0, NULL, ROUND(actual_new_camp_dynamic_search / plan_new_camp_dynamic_search * 100, 2)) AS actual_vs_plan_dynamic
-  , IF(plan_criteo = 0, NULL, ROUND(actual_criteo / plan_criteo * 100, 2))             AS actual_vs_plan_criteo
+  , IF(plan_criteo_re = 0, NULL, ROUND(actual_criteo_re / plan_criteo_re * 100, 2))                AS actual_vs_plan_criteo_re
+  , IF(plan_criteo_new = 0, NULL, ROUND(actual_criteo_new / plan_criteo_new * 100, 2))             AS actual_vs_plan_criteo_new
 FROM `datavadoz-438714.cps_monitor_gsheet.cost_run_rate`
 ;

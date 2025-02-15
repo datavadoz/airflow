@@ -21,7 +21,8 @@ NOTIFY_TEMPLATE = """=== RUN-RATE: *{dmc3}*
 - GG % actual/plan: {actual_vs_plan_gg}
 - TT % actual/plan: {actual_vs_plan_tt}
 - Dynamic % actual/plan: {actual_vs_plan_dynamic}
-- Criteo % actual/plan: {actual_vs_plan_criteo}
+- Criteo RE % actual/plan: {actual_vs_plan_criteo_re}
+- Criteo NEW % actual/plan: {actual_vs_plan_criteo_new}
 """
 
 local_tz = pendulum.timezone("Asia/Ho_Chi_Minh")
@@ -41,7 +42,7 @@ def create_external_table():
     bq.create_bq_table_from_gsheet_table(
         gsheet_table=GSheetTable(
             sheet_id='14zV1me4r6dHQn6c7nBbpW549eumP9OdfVfUq3kH51uQ',
-            tab_name='Cost runrate!A2:AG69',
+            tab_name='Cost runrate!A2:AF71',
             schema_name='cps_gsheet_bot_cost_run_rate.json'
         ),
         full_table_id='datavadoz-438714.cps_monitor_gsheet.cost_run_rate',
@@ -80,8 +81,10 @@ def notify(**kwargs):
             if row['actual_vs_plan_tt'] else 'N/A'
         actual_vs_plan_dynamic = f"{row['actual_vs_plan_dynamic']}%" \
             if row['actual_vs_plan_dynamic'] else 'N/A'
-        actual_vs_plan_criteo = f"{row['actual_vs_plan_criteo']}%" \
-            if row['actual_vs_plan_criteo'] else 'N/A'
+        actual_vs_plan_criteo_re = f"{row['actual_vs_plan_criteo_re']}%" \
+            if row['actual_vs_plan_criteo_re'] else 'N/A'
+        actual_vs_plan_criteo_new = f"{row['actual_vs_plan_criteo_new']}%" \
+            if row['actual_vs_plan_criteo_new'] else 'N/A'
 
         msg = NOTIFY_TEMPLATE.format(
             dmc3=dmc3,
@@ -95,7 +98,8 @@ def notify(**kwargs):
             actual_vs_plan_gg=actual_vs_plan_gg,
             actual_vs_plan_tt=actual_vs_plan_tt,
             actual_vs_plan_dynamic=actual_vs_plan_dynamic,
-            actual_vs_plan_criteo=actual_vs_plan_criteo,
+            actual_vs_plan_criteo_re=actual_vs_plan_criteo_re,
+            actual_vs_plan_criteo_new=actual_vs_plan_criteo_new
         )
 
         TelegramOperator(

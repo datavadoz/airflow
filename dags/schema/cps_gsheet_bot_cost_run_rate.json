@@ -49,13 +49,6 @@
     "fields": []
   },
   {
-    "name": "actual_budget_perc",
-    "mode": "NULLABLE",
-    "type": "FLOAT",
-    "description": "",
-    "fields": []
-  },
-  {
     "name": "plan_budget_perc",
     "mode": "NULLABLE",
     "type": "FLOAT",
@@ -63,9 +56,16 @@
     "fields": []
   },
   {
-    "name": "string_field_9",
+    "name": "actual_budget_perc",
     "mode": "NULLABLE",
-    "type": "STRING",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "float_field_9",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
     "description": "",
     "fields": []
   },
@@ -85,20 +85,6 @@
   },
   {
     "name": "string_field_12",
-    "mode": "NULLABLE",
-    "type": "STRING",
-    "description": "",
-    "fields": []
-  },
-  {
-    "name": "int64_field_13",
-    "mode": "NULLABLE",
-    "type": "INTEGER",
-    "description": "",
-    "fields": []
-  },
-  {
-    "name": "string_field_14",
     "mode": "NULLABLE",
     "type": "STRING",
     "description": "",
@@ -133,6 +119,13 @@
     "fields": []
   },
   {
+    "name": "plan_criteo_new",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
     "name": "plan_new_camp_dynamic_search",
     "mode": "NULLABLE",
     "type": "INTEGER",
@@ -140,14 +133,7 @@
     "fields": []
   },
   {
-    "name": "plan_criteo",
-    "mode": "NULLABLE",
-    "type": "INTEGER",
-    "description": "",
-    "fields": []
-  },
-  {
-    "name": "int64_field_21",
+    "name": "plan_criteo_re",
     "mode": "NULLABLE",
     "type": "INTEGER",
     "description": "",
@@ -189,6 +175,13 @@
     "fields": []
   },
   {
+    "name": "actual_criteo_new",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
     "name": "actual_new_camp_dynamic_search",
     "mode": "NULLABLE",
     "type": "INTEGER",
@@ -196,14 +189,7 @@
     "fields": []
   },
   {
-    "name": "actual_criteo",
-    "mode": "NULLABLE",
-    "type": "INTEGER",
-    "description": "",
-    "fields": []
-  },
-  {
-    "name": "int64_field_29",
+    "name": "actual_criteo_re",
     "mode": "NULLABLE",
     "type": "INTEGER",
     "description": "",
@@ -225,6 +211,13 @@
   },
   {
     "name": "dmc1",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "qlnh",
     "mode": "NULLABLE",
     "type": "STRING",
     "description": "",
